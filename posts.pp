@@ -46,6 +46,7 @@ dashboard "RecentPosts" {
             p.title,
             p.link,
             a.name,
+            a.id as author_id,
             p.day,
             c.name as category
           from
@@ -56,15 +57,16 @@ dashboard "RecentPosts" {
             wordpress_category c on c.id = p.category_id::int  -- Direct join instead of subquery
         )
         select
-          nc.title,
+          replace(nc.title, '&#8217;', '''') as title,
           nc.name,
           nc.day,
           string_agg(distinct nc.category, ', ' order by nc.category) as categories,  -- Aggregate distinct categories
-          nc.link
+          nc.link,
+          nc.author_id
         from
           named_categories nc
         group by
-          nc.id, nc.title, nc.link, nc.name, nc.day
+          nc.id, nc.title, nc.link, nc.name, nc.day, nc.author_id
         order by
           nc.day desc, nc.name;
       EOQ
@@ -72,6 +74,12 @@ dashboard "RecentPosts" {
       column "title" {
         href = "{{.link}}"
       }
+
+      column "name" {
+        href = "${local.host}/wordpress_stats.dashboard.Author?input.author_id={{.author_id}}"
+      }      
+
+
     }
 
 }

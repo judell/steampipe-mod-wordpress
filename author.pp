@@ -24,9 +24,9 @@ dashboard "Author" {
     }
 
     container {
+      width = 4
       input "author_id" {
         title = "Select Author"
-        width = 4
         type = "select"
         sql = <<EOQ
           select
@@ -43,7 +43,6 @@ dashboard "Author" {
     container {
 
       table "author" {
-        width = 6
         args = [self.input.author_id.value]
         sql = <<EOQ
           select
@@ -67,20 +66,37 @@ dashboard "Author" {
       }
 
       chart "author_posts" {
-        width = 6
+        title = "Posts by month"
         args = [self.input.author_id.value]
         sql = <<EOQ
-          select
-            to_char(date, 'YYYY-MM') as month,
-            count(*)
+          with months as (
+            select date_trunc('month', series) as month
           from
-            wordpress_post
-          where
-            author = $1
-          group by
-            month
-          order by
-            month
+            generate_series(
+              '2014-01-01' :: timestamp,
+              current_date,
+              '1 month' :: interval
+            ) as series
+          ),
+          posts as (
+            select
+              date(to_char(date(date), 'YYYY-MM') || '-01') as month,
+              count(*) as posts
+            from
+              wordpress_post
+            where
+              author = $1
+            group by
+              month
+            order by
+              month
+          )
+          select 
+            month,
+            posts
+          from
+            months
+            left join posts using (month)             
         EOQ
 
       }
@@ -93,7 +109,7 @@ dashboard "Author" {
       args = [self.input.author_id.value]
       sql = <<EOQ
         select
-          title, 
+          replace(title, '&#8217;', '''') as title,
           to_char(date, 'YYYY-MM-DD') as date,
           link
         from
