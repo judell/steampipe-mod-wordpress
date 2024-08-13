@@ -52,7 +52,7 @@ dashboard "RecentPosts" {
           from
             posts p
           join
-            wordpress_author a on p.author = a.id
+            wp_author a on p.author = a.id
           join
             wordpress_category c on c.id = p.category_id::int  -- Direct join instead of subquery
         )

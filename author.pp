@@ -24,8 +24,9 @@ dashboard "Author" {
     }
 
     container {
-      width = 4
+
       input "author_id" {
+        width = 4        
         title = "Select Author"
         type = "select"
         sql = <<EOQ
@@ -33,11 +34,48 @@ dashboard "Author" {
             name as label,
             id as value
           from
-            wordpress_author
+            wp_author
           order by
             name
         EOQ
       }
+
+chart "author_categories" {
+  width = 4
+  type = "donut"
+  args = [self.input.author_id.value]
+  sql = <<EOQ
+    with post_categories as (
+      select 
+        jsonb_array_elements(category) :: int as category_id
+      from 
+        wordpress_post
+      where 
+        author = $1
+    ),
+    category_counts as (
+      select 
+        pc.category_id,
+        wc.name as category_name,
+        count(*) as post_count
+      from 
+        post_categories pc
+      join 
+        wordpress_category wc on pc.category_id = wc.id
+      group by 
+        pc.category_id, wc.name
+      order by 
+        post_count desc
+    )
+    select 
+      category_name,
+      post_count
+    from 
+      category_counts
+  EOQ
+      
+    }
+
     }
 
     container {
@@ -50,7 +88,7 @@ dashboard "Author" {
             description,
             link
           from
-            wordpress_author
+            wp_author
           where
             id = $1
         EOQ
