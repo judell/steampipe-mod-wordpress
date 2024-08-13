@@ -27,11 +27,15 @@ dashboard "Categories" {
       width = 6
       sql = <<EOQ
         select
-          id,
           name,
-          link
+          link,
+          id
         from wordpress_category
       EOQ
+
+      column "name" {
+        href = "${local.host}/wordpress_stats.dashboard.Category?input.category_id={{.id}}"
+      }
 
     }
 
@@ -66,6 +70,7 @@ dashboard "Categories" {
       join wordpress_category wc on cc.category_id = wc.id
       order by cc.post_count desc
       EOQ
+
    }
 
 

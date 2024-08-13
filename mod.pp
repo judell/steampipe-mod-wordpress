@@ -9,6 +9,8 @@ locals {
 🞄
 [Authors](__HOST__/wordpress_stats.dashboard.Authors)
 🞄
+[Category](__HOST__/wordpress_stats.dashboard.Category)
+🞄
 [Categories](__HOST__/wordpress_stats.dashboard.Categories)
 🞄
 [RecentPosts](__HOST__/wordpress_stats.dashboard.RecentPosts)

@@ -147,17 +147,33 @@ dashboard "Author" {
       table "author_posts" {
         args = [self.input.author_id.value]
         sql = <<EOQ
+          with category_expanded as (
+            select
+              wp.id,
+              wp.title,
+              wp.date,
+              wp.link,
+              jsonb_array_elements_text(wp.category) as category_id
+            from
+              wordpress_post wp
+            where
+              wp.author = $1
+          )
           select
-            replace(title, '&#8217;', '''') as title,
-            to_char(date, 'YYYY-MM-DD') as date,
-            link
+            replace(ce.title, '&#8217;', '''') as title,
+            to_char(ce.date, 'yyyy-mm-dd') as date,
+            string_agg(distinct c.name, ', ' order by c.name) as categories,
+            ce.link
           from
-            wordpress_post
-          where
-            author = $1
+            category_expanded ce
+          join
+            wordpress_category c on c.id = ce.category_id::int
+          group by
+            ce.id, ce.title, ce.date, ce.link
           order by
-            date desc
+            ce.date desc
         EOQ
+
 
       }
 
