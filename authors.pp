@@ -8,7 +8,7 @@ dashboard "Authors" {
     container {
       
       text {
-        width = 8
+        width = 4
         value = replace(
           replace(
             "${local.menu}",

@@ -9,7 +9,8 @@ locals {
 🞄
 [Authors](__HOST__/wordpress_stats.dashboard.Authors)
 🞄
-[RecentPosts](__HOST__/wordpress_stats.dashboard.RecentPosts)
+[Categories](__HOST__/wordpress_stats.dashboard.Categories)
 🞄
+[RecentPosts](__HOST__/wordpress_stats.dashboard.RecentPosts)
 EOT
 }

@@ -8,14 +8,14 @@ dashboard "RecentPosts" {
     container {
       
       text {
-        width = 8
+        width = 4
         value = replace(
           replace(
             "${local.menu}",
             "__HOST__",
             "${local.host}"
           ),
-          "[RecentPosts](${local.host}/steampipe_stats.dashboard.RecentPosts)",
+          "[RecentPosts](${local.host}/wordpress_stats.dashboard.RecentPosts)",
           "RecentPosts"
         )
       }
@@ -36,7 +36,7 @@ dashboard "RecentPosts" {
           from
             wordpress_post p
           where
-            p.date > now() - interval '7 day'
+            p.date > now() - interval '1 month'
           order by
             p.date desc
         ),
