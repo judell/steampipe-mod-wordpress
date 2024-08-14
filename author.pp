@@ -33,7 +33,7 @@ dashboard "Author" {
             name as label,
             id as value
           from
-            wp_author
+            wordpress_author
           order by
             name
         EOQ
@@ -76,7 +76,7 @@ dashboard "Author" {
             description,
             link
           from
-            wp_author
+            wordpress_author
           where
             id = $1
         EOQ

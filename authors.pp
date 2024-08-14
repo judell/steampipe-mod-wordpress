@@ -31,7 +31,7 @@ dashboard "Authors" {
           link,
           id
         from
-          wp_author
+          wordpress_author
         order by name
       EOQ
 

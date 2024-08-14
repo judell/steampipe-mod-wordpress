@@ -75,7 +75,7 @@ dashboard "Category" {
             from
               posts p
             join
-              wp_author a on p.author = a.id
+              wordpress_author a on p.author = a.id
             join
               wordpress_category c on c.id = p.category_id::int
           )
