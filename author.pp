@@ -27,7 +27,6 @@ dashboard "Author" {
 
       input "author_id" {
         width = 4        
-        title = "Select Author"
         type = "select"
         sql = <<EOQ
           select
@@ -39,12 +38,37 @@ dashboard "Author" {
             name
         EOQ
       }
+
+      card "old_post" {
+        width = 2
+        args = [self.input.author_id.value]
+        sql = <<EOQ
+        select
+          to_char(min(date), 'YYYY-MM-DD') as newest_post
+        from wordpress_post
+          where
+        author = $1
+        EOQ
+      }
+
+      card "newest_post" {
+        width = 2
+        args = [self.input.author_id.value]
+        sql = <<EOQ
+        select
+          to_char(max(date), 'YYYY-MM-DD') as newest_post
+        from wordpress_post
+          where
+        author = $1
+        EOQ
+      }
+
     }
 
     container {
 
       table "author" {
-        width = 6
+        width = 8
         args = [self.input.author_id.value]
         sql = <<EOQ
           select
@@ -62,9 +86,9 @@ dashboard "Author" {
         }
       }
 
-
       chart "author_categories" {
-        width = 6
+        title = "Post categories"
+        width = 4
         type = "donut"
         args = [self.input.author_id.value]
         sql = <<EOQ
