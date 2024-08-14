@@ -2,4 +2,5 @@
 
 This mod uses the [steampipe plugin for wordpress](https://github.com/judell/steampipe-plugin-wordpress).
 
-![image](https://github.com/user-attachments/assets/9de142fe-09af-46ac-b822-4467c1bbbce5)
+![image](https://github.com/user-attachments/assets/b2aec818-d549-4c9c-8a11-06f9f70c8747)
+
